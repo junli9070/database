@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS PurchaseOrder (
     'Status' VARCHAR(10),
 	
 	CONSTRAINT  PurchaseOrder_pk  PRIMARY KEY  (OrderID),
-	CONSTRAINT  PurchaseOrder__fk  FOREIGN KEY  (SupID)
+	CONSTRAINT  PurchaseOrder_SupID_fk  FOREIGN KEY  (SupID)
 					REFERENCES  Supplier(SupID),				
 	CONSTRAINT  PurchaseOrder_OrderID_cc 
 		CHECK  (OrderID IN ('Or*'))
@@ -142,28 +142,19 @@ INSERT INTO PurchaseOrder VALUES
     ('Or 000001','2018-06-01','Sup 000001','finish'),
     ('Or 000002','2018-05-01','Sup 000001','finish');
 
-
-	
-	/*
-	
-	below are not finish
-	
-	*/
-	
-	
-	
-	
-	
-	
-	
-	
 	
 /*DeliveryNote*/
 CREATE TABLE IF NOT EXISTS DeliveryNote (
     'DeliNoteID' VARCHAR(9) NOT NULL,
     'Status' VARCHAR(10) NOT NULL,
     'DeliDate' DATE NOT NULL,
-    'RequestID' VARCHAR(10) NOT NULL
+    'RequestID' VARCHAR(10) NOT NULL,
+	
+	CONSTRAINT  DeliveryNote_pk  PRIMARY KEY  (DeliNoteID),
+	CONSTRAINT  DeliveryNote_RequestID_fk  FOREIGN KEY  (RequestID)
+					REFERENCES  Request(RequestID),				
+	CONSTRAINT  DeliveryNote_DeliNoteID_cc 
+		CHECK  (DeliNoteID IN ('Dr*'))
 );
 INSERT INTO DeliveryNote VALUES
     ('Dn 000001','finish','2018-06-20','Req 000001'),
@@ -173,7 +164,13 @@ INSERT INTO DeliveryNote VALUES
 CREATE TABLE IF NOT EXISTS Warehouse (
     'StockID' VARCHAR(8) NOT NULL,
     'Quantity' INT NOT NULL,
-    'PSID' VARCHAR(9) NOT NULL
+    'PSID' VARCHAR(9) NOT NULL,
+	
+	CONSTRAINT  Warehouse_pk  PRIMARY KEY  (StockID),
+	CONSTRAINT  Warehouse_PSID_fk  FOREIGN KEY  (PSID)
+					REFERENCES  Product_Supplier(PSID),				
+	CONSTRAINT  Warehouse_StockID_cc 
+		CHECK  (StockID IN ('S*'))
 );
 INSERT INTO Warehouse VALUES
     ('S 000001',100,'PS 000001'),
@@ -183,7 +180,12 @@ INSERT INTO Warehouse VALUES
 CREATE TABLE IF NOT EXISTS Product (
     'ProductID' VARCHAR(8) NOT NULL,
     'ProductName' VARCHAR(20) NOT NULL,
-    'Description' VARCHAR(100) 
+    'Description' VARCHAR(100),
+	
+	CONSTRAINT  Product_pk  PRIMARY KEY  (ProductID),
+	CONSTRAINT  Product_ProductID_cc 
+		CHECK  (ProductID IN ('P*'))
+	
 );
 INSERT INTO Product VALUES
     ('P 000001','Steak','in kg'),
@@ -194,19 +196,37 @@ CREATE TABLE IF NOT EXISTS Product_Supplier (
     'PSID' VARCHAR(9) NOT NULL,
     'SupID' VARCHAR(10) NOT NULL,
     'ProductID' VARCHAR(8) NOT NULL,
-    'UnitPrice' INT
+    'UnitPrice' INT,
+	
+	CONSTRAINT  Product_Supplier_pk  PRIMARY KEY  (PSID),
+	CONSTRAINT  Product_Supplier_SupID_fk  FOREIGN KEY  (SupID)
+					REFERENCES  Supplier(SupID),
+	CONSTRAINT  Product_Supplier_ProductID_fk  FOREIGN KEY  (ProductID)
+					REFERENCES  Product(ProductID),						
+	CONSTRAINT  Product_Supplier_PSID_cc 
+		CHECK  (PSID IN ('Ps*'))
 );
 INSERT INTO Product_Supplier VALUES
     ('Ps 000001','Sup 000001','P 000001',150),
     ('Ps 000002','Sup 000002','P 000002',15);
 
 /*Order_RequestLine_Product*/
-CREATE TABLE IF NOT EXISTS Order_RequestLine_Product (
+CREATE TABLE IF NOT EXISTS Order_RequestLine_Product(
     'ORPID' VARCHAR(10) NOT NULL,
     'OrderID' VARCHAR(9)  NOT NULL,
     'RequestID' VARCHAR(10) NOT NULL,
     'ProductID' VARCHAR(8) NOT NULL,
-    'Quantity' INT
+    'Quantity' INT,
+	
+	CONSTRAINT  Order_RequestLine_Product_pk  PRIMARY KEY  (ORPID),
+	CONSTRAINT  Order_RequestLine_Product_OrderID_fk  FOREIGN KEY  (OrderID)
+					REFERENCES  PurchasOrder(OrderID),
+	CONSTRAINT  Order_RequestLine_Product_RequestID_fk  FOREIGN KEY  (RequestID)
+					REFERENCES  Request(RequestID),
+	CONSTRAINT  Order_RequestLine_Product_ProductID_fk  FOREIGN KEY  (ProductID)
+					REFERENCES  Product(ProductID),					
+	CONSTRAINT  Order_RequestLine_Product_ORPID_cc 
+		CHECK  (ORPID IN ('Orp*'))
 );
 INSERT INTO Order_RequestLine_Product VALUES
     ('Orp 000001','Or 000001','Req 000001','P 000001',20),
