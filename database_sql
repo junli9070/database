@@ -8,22 +8,22 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`supplychain` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
-USE 'supplychain';
+USE `supplychain`;
 set global optimizer_switch='derived_merge=off';
 set optimizer_switch='derived_merge=off';
 
-DROP TABLE IF EXISTS 'Staff';
-DROP TABLE IF EXISTS 'Restaurant';
-DROP TABLE IF EXISTS 'Supplier';
-DROP TABLE IF EXISTS 'PurchasOrder';
-DROP TABLE IF EXISTS 'Agreement';
-DROP TABLE IF EXISTS 'Warehouse';
-DROP TABLE IF EXISTS 'Order_RequestLine_Product';
-DROP TABLE IF EXISTS 'Product';
-DROP TABLE IF EXISTS 'Product_Supplier';
-DROP TABLE IF EXISTS 'RequestLine';
-DROP TABLE IF EXISTS 'Request';
-DROP TABLE IF EXISTS 'DeliveryNote';
+DROP TABLE IF EXISTS `Staff`;
+DROP TABLE IF EXISTS `Restaurant`;
+DROP TABLE IF EXISTS `Supplier`;
+DROP TABLE IF EXISTS `PurchasOrder`;
+DROP TABLE IF EXISTS `Agreement`;
+DROP TABLE IF EXISTS `Warehouse`;
+DROP TABLE IF EXISTS `Order_RequestLine_Product`;
+DROP TABLE IF EXISTS `Product`;
+DROP TABLE IF EXISTS `Product_Supplier`;
+DROP TABLE IF EXISTS `RequestLine`;
+DROP TABLE IF EXISTS `Request`;
+DROP TABLE IF EXISTS `DeliveryNote`;
 
 
 /*Staff */
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS Request (
     'Status' VARCHAR(10) NOT NULL,
     'RequestDate' DATE NOT NULL,
     'StaffID' CHAR(8) NOT NULL,
-    'DeliNoteID' VARCHAR(10) NOT NULL,
+    'DeliNoteID' VARCHAR(10) ,
     'ORPID' VARCHAR(10),
 	
 	CONSTRAINT  Request_pk  PRIMARY KEY  (RequestID),
@@ -254,4 +254,4 @@ CREATE TABLE IF NOT EXISTS Order_RequestLine_Product(
 );
 INSERT INTO Order_RequestLine_Product VALUES
     ('Orp 000001','Or 000001','Req 000001','P 000001',20),
-    ('Orp 000002','Or 000002','Req 000002','P 000002',30);
+    ('Orp 000002','Or 000002','Req 000002','P 000002',30);	
