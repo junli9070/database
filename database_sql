@@ -26,37 +26,6 @@ DROP TABLE IF EXISTS `Request`;
 DROP TABLE IF EXISTS `DeliveryNote`;
 
 
-/*Staff */
-CREATE TABLE IF NOT EXISTS Staff (
-    StaffID CHAR(8) NOT NULL,
-    UserName VARCHAR(20) NOT NULL,
-    Password VARCHAR(20) NOT NULL,
-    Position VARCHAR(20) NOT NULL,
-    FirstName VARCHAR(10) NOT NULL,
-    LastName VARCHAR(10) NOT NULL,
-    Phone INT NOT NULL,
-    Email VARCHAR(50) NOT NULL,
-    RestID VARCHAR(11),
-	
-	CONSTRAINT  Staff_pk  PRIMARY KEY  (StaffID),
-	CONSTRAINT  Staff_RestID_fk  FOREIGN KEY  (ResetID)
-					REFERENCES  Restaurant(ResetID),
-	CONSTRAINT  Staff_StaffID_cc 
-		CHECK  (StaffID IN ( 'P%', 'R%', 'A*','W*' ) ),
-	CONSTRAINT  Staff_Position_cc 
-		CHECK  (Position IN ( 'Warehouse Clerk', 'Restaurant Manager', 'Accounting Clerk','Purchasing Clerk' ) )
-);
-
-INSERT INTO Staff VALUES
-    ('R 000001','TestWhite','a12345678','Restaurant Manager','Test','White',12345678,'R000001@vtc.hk','Rest 000001'),
-    ('R 000002','TestRed','a11111111','Restaurant Manager','Test','Red',23456789,'R000002@vtc.hk','Rest 000002'),
-    ('R 000003','TestBlack','a987654321','Restaurant Manager','Test','Black',65456781,'R000003@vtc.hk','Rest 000003'),
-    ('W 000004','TestWare','qwerty','Warehouse Clerk','Test','Ware',61381478,'W000004@vtc.hk',NULL),
-    ('W 000005','TestHouse','asdfgh','Warehouse Clerk','Test','House',99970635,'W000005@vtc.hk',NULL),
-    ('P 000006','TestPurchas','zxcvbn','Purchasing Clerk','Test','Purchas',94594634,'P000006@vtc.hk',NULL),
-    ('P 000007','TestBlue','123456','Purchasing Clerk','Test','Blue',90316889,'P000007@vtc.hk',NULL),
-    ('A 000008','TestAccount','112233','Accounting Clerk','Test','Account',68606283,'A000008@vtc.hk',NULL);
-
 /*Restaurant */	
 CREATE TABLE IF NOT EXISTS Restaurant (
     RestID VARCHAR(11) NOT NULL,
@@ -89,6 +58,41 @@ CREATE TABLE IF NOT EXISTS Supplier (
 INSERT INTO Supplier VALUES
     ('Sup 000001','Victory',98745651,'Peter Wong'),
     ('Sup 000002','BestChoice',56815321,'John Chan');
+	
+	
+/*Staff */
+CREATE TABLE IF NOT EXISTS Staff (
+    StaffID CHAR(8) NOT NULL,
+    UserName VARCHAR(20) NOT NULL,
+    Password VARCHAR(20) NOT NULL,
+    Position VARCHAR(20) NOT NULL,
+    FirstName VARCHAR(10) NOT NULL,
+    LastName VARCHAR(10) NOT NULL,
+    Phone INT NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    RestID VARCHAR(11),
+	
+	CONSTRAINT  Staff_pk  PRIMARY KEY  (StaffID),
+	CONSTRAINT  Staff_RestID_fk  FOREIGN KEY  (ResetID)
+					REFERENCES  Restaurant(ResetID),
+	CONSTRAINT  Staff_StaffID_cc 
+		CHECK  (StaffID IN ( 'P%', 'R%', 'A*','W*' ) ),
+	CONSTRAINT  Staff_Position_cc 
+		CHECK  (Position IN ( 'Warehouse Clerk', 'Restaurant Manager', 'Accounting Clerk','Purchasing Clerk' ) )
+);
+
+INSERT INTO Staff VALUES
+    ('R 000001','TestWhite','a12345678','Restaurant Manager','Test','White',12345678,'R000001@vtc.hk','Rest 000001'),
+    ('R 000002','TestRed','a11111111','Restaurant Manager','Test','Red',23456789,'R000002@vtc.hk','Rest 000002'),
+    ('R 000003','TestBlack','a987654321','Restaurant Manager','Test','Black',65456781,'R000003@vtc.hk','Rest 000003'),
+    ('W 000004','TestWare','qwerty','Warehouse Clerk','Test','Ware',61381478,'W000004@vtc.hk',NULL),
+    ('W 000005','TestHouse','asdfgh','Warehouse Clerk','Test','House',99970635,'W000005@vtc.hk',NULL),
+    ('P 000006','TestPurchas','zxcvbn','Purchasing Clerk','Test','Purchas',94594634,'P000006@vtc.hk',NULL),
+    ('P 000007','TestBlue','123456','Purchasing Clerk','Test','Blue',90316889,'P000007@vtc.hk',NULL),
+    ('A 000008','TestAccount','112233','Accounting Clerk','Test','Account',68606283,'A000008@vtc.hk',NULL);
+
+
+
 
 /*Agreement */
 CREATE TABLE IF NOT EXISTS Agreement (
@@ -184,21 +188,6 @@ INSERT INTO DeliveryNote VALUES
     ('Dn 000001','finish','2018-06-20','Req 000001'),
     ('Dn 000002','process','2018-05-10','Req 000002');
 
-/*Warehouse*/
-CREATE TABLE IF NOT EXISTS Warehouse (
-    'StockID' VARCHAR(8) NOT NULL,
-    'Quantity' INT NOT NULL,
-    'PSID' VARCHAR(9) NOT NULL,
-	
-	CONSTRAINT  Warehouse_pk  PRIMARY KEY  (StockID),
-	CONSTRAINT  Warehouse_PSID_fk  FOREIGN KEY  (PSID)
-					REFERENCES  Product_Supplier(PSID),				
-	CONSTRAINT  Warehouse_StockID_cc 
-		CHECK  (StockID IN ('S*'))
-);
-INSERT INTO Warehouse VALUES
-    ('S 000001',100,'PS 000001'),
-    ('S 000002',200,'PS 000002');
 
 /*Product*/
 CREATE TABLE IF NOT EXISTS Product (
@@ -233,6 +222,26 @@ CREATE TABLE IF NOT EXISTS Product_Supplier (
 INSERT INTO Product_Supplier VALUES
     ('Ps 000001','Sup 000001','P 000001',150),
     ('Ps 000002','Sup 000002','P 000002',15);
+	
+	
+/*Warehouse*/
+CREATE TABLE IF NOT EXISTS Warehouse (
+    'StockID' VARCHAR(8) NOT NULL,
+    'Quantity' INT NOT NULL,
+    'PSID' VARCHAR(9) NOT NULL,
+	
+	CONSTRAINT  Warehouse_pk  PRIMARY KEY  (StockID),
+	CONSTRAINT  Warehouse_PSID_fk  FOREIGN KEY  (PSID)
+					REFERENCES  Product_Supplier(PSID),				
+	CONSTRAINT  Warehouse_StockID_cc 
+		CHECK  (StockID IN ('S*'))
+);
+INSERT INTO Warehouse VALUES
+    ('S 000001',100,'PS 000001'),
+    ('S 000002',200,'PS 000002');
+
+	
+	
 
 /*Order_RequestLine_Product*/
 CREATE TABLE IF NOT EXISTS Order_RequestLine_Product(
