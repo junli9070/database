@@ -119,16 +119,15 @@ CREATE TABLE IF NOT EXISTS Request (
     'RequestDate' DATE NOT NULL,
     'StaffID' CHAR(8) NOT NULL,
     'DeliNoteID' VARCHAR(10) ,
-    'ORPID' VARCHAR(10),
+
 	
 	CONSTRAINT  Request_pk  PRIMARY KEY  (RequestID),
-,
 	CONSTRAINT  Request_RequestID_cc 
 		CHECK  (RequestID IN ( 'Ren*' ) )
 );
 INSERT INTO Request VALUES
-    ('Req 000001','Finish','2018-06-10','R 000002','DN 000001','ORP 000001'),
-    ('Req 000002','Process','2018-06-23','R 000003','DN 000002','ORP 000002');
+    ('Req 000001','Finish','2018-06-10','R 000002','DN 000001'),
+    ('Req 000002','Process','2018-06-23','R 000003','');
 
 /*RequestLine*/
 CREATE TABLE IF NOT EXISTS RequestLine (
