@@ -1,0 +1,245 @@
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`supplychain` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `supplychain`;
+set global optimizer_switch='derived_merge=off';
+set optimizer_switch='derived_merge=off';
+
+DROP TABLE IF EXISTS `Staff`;
+DROP TABLE IF EXISTS `Restaurant`;
+DROP TABLE IF EXISTS `Supplier`;
+DROP TABLE IF EXISTS `PurchasOrder`;
+DROP TABLE IF EXISTS `Agreement`;
+DROP TABLE IF EXISTS `Warehouse`;
+DROP TABLE IF EXISTS `Order_RequestLine_Product`;
+DROP TABLE IF EXISTS `Product`;
+DROP TABLE IF EXISTS `Product_Supplier`;
+DROP TABLE IF EXISTS `RequestLine`;
+DROP TABLE IF EXISTS `Request`;
+DROP TABLE IF EXISTS `DeliveryNote`;
+
+
+/*Restaurant */	
+CREATE TABLE IF NOT EXISTS Restaurant (
+    RestID VARCHAR(11) NOT NULL,
+    Address VARCHAR(100) NOT NULL,
+    RestName VARCHAR(50) NOT NULL,
+    Phone INT NOT NULL,
+	
+	CONSTRAINT  Restaurant_pk  PRIMARY KEY  (RestID),
+	CONSTRAINT  Restaurant_RestID_fk 
+		CHECK  (RestID IN ( 'Rest*' ) )
+);
+
+INSERT INTO Restaurant VALUES
+    ('Rest 000001','TSW','Canteen',81235455),
+    ('Rest 000002','HKIsland','Hotel',54654822),
+    ('Rest 000003','TuenMun','JapaneseRestaurant',58975641);
+
+/*Supplier */
+CREATE TABLE IF NOT EXISTS Supplier (
+    SupID VARCHAR(10) NOT NULL,
+    SupName VARCHAR(20) NOT NULL,
+    Phone INT NOT NULL,
+    ContentPerson VARCHAR(20) NOT NULL,
+	
+	CONSTRAINT  Supplier_pk  PRIMARY KEY  (SupID),
+	CONSTRAINT  Supplier_SupID_fk 
+		CHECK  (RestID IN ( 'Sup*' ) )
+);
+
+INSERT INTO Supplier VALUES
+    ('Sup 000001','Victory',98745651,'Peter Wong'),
+    ('Sup 000002','BestChoice',56815321,'John Chan');
+	
+	
+/*Staff */
+CREATE TABLE IF NOT EXISTS Staff (
+    StaffID CHAR(8) NOT NULL,
+    UserName VARCHAR(20) NOT NULL,
+    Password VARCHAR(20) NOT NULL,
+    Position VARCHAR(20) NOT NULL,
+    FirstName VARCHAR(10) NOT NULL,
+    LastName VARCHAR(10) NOT NULL,
+    Phone INT NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    RestID VARCHAR(11),
+	
+	CONSTRAINT  Staff_pk  PRIMARY KEY  (StaffID),
+
+	CONSTRAINT  Staff_StaffID_cc 
+		CHECK  (StaffID IN ( 'P%', 'R%', 'A*','W*' ) ),
+	CONSTRAINT  Staff_Position_cc 
+		CHECK  (Position IN ( 'Warehouse Clerk', 'Restaurant Manager', 'Accounting Clerk','Purchasing Clerk' ) )
+);
+
+INSERT INTO Staff VALUES
+    ('R 000001','TestWhite','a12345678','Restaurant Manager','Test','White',12345678,'R000001@vtc.hk','Rest 000001'),
+    ('R 000002','TestRed','a11111111','Restaurant Manager','Test','Red',23456789,'R000002@vtc.hk','Rest 000002'),
+    ('R 000003','TestBlack','a987654321','Restaurant Manager','Test','Black',65456781,'R000003@vtc.hk','Rest 000003'),
+    ('W 000004','TestWare','qwerty','Warehouse Clerk','Test','Ware',61381478,'W000004@vtc.hk',NULL),
+    ('W 000005','TestHouse','asdfgh','Warehouse Clerk','Test','House',99970635,'W000005@vtc.hk',NULL),
+    ('P 000006','TestPurchas','zxcvbn','Purchasing Clerk','Test','Purchas',94594634,'P000006@vtc.hk',NULL),
+    ('P 000007','TestBlue','123456','Purchasing Clerk','Test','Blue',90316889,'P000007@vtc.hk',NULL),
+    ('A 000008','TestAccount','112233','Accounting Clerk','Test','Account',68606283,'A000008@vtc.hk',NULL);
+
+
+
+
+/*Agreement */
+CREATE TABLE IF NOT EXISTS Agreement (
+    AgreementID VARCHAR(9) NOT NULL,
+    SupID VARCHAR(10) NOT NULL,
+    AgreementType VARCHAR(20) NOT NULL,
+    CreateDate DATE NOT NULL,
+    EffectiveDate DATE NOT NULL,
+    Description VARCHAR(20),
+	
+	
+	CONSTRAINT  Agreement_pk  PRIMARY KEY  (AgreementID),
+
+	CONSTRAINT  Agreement_AgreementID_cc 
+		CHECK  (AgreementID IN ( 'Ag*' ) )
+);
+INSERT INTO Agreement VALUES
+    ('Ag 000001','Sup 000001','Blanket Purchase','2018-01-02','2022-01-02','First time agreement'),
+    ('Ag 000002','Sup 000002','Contract Purchase','2017-02-05','2025-02-05',NULL);
+	
+/* Request*/
+CREATE TABLE IF NOT EXISTS Request (
+    'RequestID' VARCHAR(10) NOT NULL,
+    'Status' VARCHAR(10) NOT NULL,
+    'RequestDate' DATE NOT NULL,
+    'StaffID' CHAR(8) NOT NULL,
+    'DeliNoteID' VARCHAR(10) ,
+    'ORPID' VARCHAR(10),
+	
+	CONSTRAINT  Request_pk  PRIMARY KEY  (RequestID),
+,
+	CONSTRAINT  Request_RequestID_cc 
+		CHECK  (RequestID IN ( 'Ren*' ) )
+);
+INSERT INTO Request VALUES
+    ('Req 000001','Finish','2018-06-10','R 000002','DN 000001','ORP 000001'),
+    ('Req 000002','Process','2018-06-23','R 000003','DN 000002','ORP 000002');
+
+/*RequestLine*/
+CREATE TABLE IF NOT EXISTS RequestLine (
+    'RLID' VARCHAR(9),
+    'RequestID' VARCHAR(10),
+    'PSID' VARCHAR(9),
+    'Quantity' INT,
+	
+	CONSTRAINT  RequestLine_pk  PRIMARY KEY  (RLID),		
+	CONSTRAINT  RequestLine_RLID_cc 
+		CHECK  (RequestID IN ( 'Rl*' ) )
+);
+INSERT INTO RequestLine VALUES
+    ('Rl 000001','R 000001','Ps 000001',120),
+    ('Rl 000002','R 000002','Ps 000002',230);
+
+	
+/*PurchaseOrder*/
+CREATE TABLE IF NOT EXISTS PurchaseOrder (
+    'OrderID' VARCHAR(9) NOT NULL,
+    'CreateDate' DATE NOT NULL,
+    'SupID' VARCHAR(10) NOT NULL,
+    'Status' VARCHAR(10),
+	
+	CONSTRAINT  PurchaseOrder_pk  PRIMARY KEY  (OrderID),			
+	CONSTRAINT  PurchaseOrder_OrderID_cc 
+		CHECK  (OrderID IN ('Or*'))
+);
+INSERT INTO PurchaseOrder VALUES
+    ('Or 000001','2018-06-01','Sup 000001','finish'),
+    ('Or 000002','2018-05-01','Sup 000001','finish');
+
+	
+/*DeliveryNote*/
+CREATE TABLE IF NOT EXISTS DeliveryNote (
+    'DeliNoteID' VARCHAR(9) NOT NULL,
+    'Status' VARCHAR(10) NOT NULL,
+    'DeliDate' DATE NOT NULL,
+    'RequestID' VARCHAR(10) NOT NULL,
+	
+	CONSTRAINT  DeliveryNote_pk  PRIMARY KEY  (DeliNoteID),
+			
+	CONSTRAINT  DeliveryNote_DeliNoteID_cc 
+		CHECK  (DeliNoteID IN ('Dr*'))
+);
+INSERT INTO DeliveryNote VALUES
+    ('Dn 000001','finish','2018-06-20','Req 000001'),
+    ('Dn 000002','process','2018-05-10','Req 000002');
+
+
+/*Product*/
+CREATE TABLE IF NOT EXISTS Product (
+    'ProductID' VARCHAR(8) NOT NULL,
+    'ProductName' VARCHAR(20) NOT NULL,
+    'Description' VARCHAR(100),
+	
+	CONSTRAINT  Product_pk  PRIMARY KEY  (ProductID),
+	CONSTRAINT  Product_ProductID_cc 
+		CHECK  (ProductID IN ('P*'))
+	
+);
+INSERT INTO Product VALUES
+    ('P 000001','Steak','in kg'),
+    ('P 000002','Fork',NULL);
+	
+/*ProductSupplier*/
+CREATE TABLE IF NOT EXISTS Product_Supplier (
+    'PSID' VARCHAR(9) NOT NULL,
+    'SupID' VARCHAR(10) NOT NULL,
+    'ProductID' VARCHAR(8) NOT NULL,
+    'UnitPrice' INT,
+	
+	CONSTRAINT  Product_Supplier_pk  PRIMARY KEY  (PSID),				
+	CONSTRAINT  Product_Supplier_PSID_cc 
+		CHECK  (PSID IN ('Ps*'))
+);
+INSERT INTO Product_Supplier VALUES
+    ('Ps 000001','Sup 000001','P 000001',150),
+    ('Ps 000002','Sup 000002','P 000002',15);
+	
+	
+/*Warehouse*/
+CREATE TABLE IF NOT EXISTS Warehouse (
+    'StockID' VARCHAR(8) NOT NULL,
+    'Quantity' INT NOT NULL,
+    'PSID' VARCHAR(9) NOT NULL,
+	
+	CONSTRAINT  Warehouse_pk  PRIMARY KEY  (StockID),
+			
+	CONSTRAINT  Warehouse_StockID_cc 
+		CHECK  (StockID IN ('S*'))
+);
+INSERT INTO Warehouse VALUES
+    ('S 000001',100,'PS 000001'),
+    ('S 000002',200,'PS 000002');
+
+	
+	
+
+/*Order_RequestLine_Product*/
+CREATE TABLE IF NOT EXISTS Order_RequestLine_Product(
+    'ORPID' VARCHAR(10) NOT NULL,
+    'OrderID' VARCHAR(9)  NOT NULL,
+    'RequestID' VARCHAR(10) NOT NULL,
+    'ProductID' VARCHAR(8) NOT NULL,
+    'Quantity' INT,
+	
+	CONSTRAINT  Order_RequestLine_Product_pk  PRIMARY KEY  (ORPID),			
+	CONSTRAINT  Order_RequestLine_Product_ORPID_cc 
+		CHECK  (ORPID IN ('Orp*'))
+);
+INSERT INTO Order_RequestLine_Product VALUES
+    ('Orp 000001','Or 000001','Req 000001','P 000001',20),
+    ('Orp 000002','Or 000002','Req 000002','P 000002',30);	
