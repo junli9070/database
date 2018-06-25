@@ -6,7 +6,9 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`supplychain` /*!40100 DEFAULT CHARACTER SET latin1 */;
+DROP DATABASE `supplychain`;
+
+Create database supplychain;
 
 USE `supplychain`;
 set global optimizer_switch='derived_merge=off';
@@ -114,11 +116,11 @@ INSERT INTO Agreement VALUES
 	
 /* Request*/
 CREATE TABLE IF NOT EXISTS Request (
-    'RequestID' VARCHAR(10) NOT NULL,
-    'Status' VARCHAR(10) NOT NULL,
-    'RequestDate' DATE NOT NULL,
-    'StaffID' CHAR(8) NOT NULL,
-    'DeliNoteID' VARCHAR(10) ,
+    RequestID VARCHAR(10) NOT NULL,
+    Status VARCHAR(10) NOT NULL,
+    RequestDate DATE NOT NULL,
+    StaffID CHAR(8) NOT NULL,
+    DeliNoteID VARCHAR(10) ,
 
 	
 	CONSTRAINT  Request_pk  PRIMARY KEY  (RequestID),
@@ -131,10 +133,10 @@ INSERT INTO Request VALUES
 
 /*RequestLine*/
 CREATE TABLE IF NOT EXISTS RequestLine (
-    'RLID' VARCHAR(9),
-    'RequestID' VARCHAR(10),
-    'PSID' VARCHAR(9),
-    'Quantity' INT,
+    RLID VARCHAR(9),
+    RequestID VARCHAR(10),
+    PSID VARCHAR(9),
+    Quantity INT,
 	
 	CONSTRAINT  RequestLine_pk  PRIMARY KEY  (RLID),		
 	CONSTRAINT  RequestLine_RLID_cc 
@@ -147,10 +149,10 @@ INSERT INTO RequestLine VALUES
 	
 /*PurchaseOrder*/
 CREATE TABLE IF NOT EXISTS PurchaseOrder (
-    'OrderID' VARCHAR(9) NOT NULL,
-    'CreateDate' DATE NOT NULL,
-    'SupID' VARCHAR(10) NOT NULL,
-    'Status' VARCHAR(10),
+    OrderID VARCHAR(9) NOT NULL,
+    CreateDate DATE NOT NULL,
+    SupID VARCHAR(10) NOT NULL,
+    Status VARCHAR(10),
 	
 	CONSTRAINT  PurchaseOrder_pk  PRIMARY KEY  (OrderID),			
 	CONSTRAINT  PurchaseOrder_OrderID_cc 
@@ -163,10 +165,10 @@ INSERT INTO PurchaseOrder VALUES
 	
 /*DeliveryNote*/
 CREATE TABLE IF NOT EXISTS DeliveryNote (
-    'DeliNoteID' VARCHAR(9) NOT NULL,
-    'Status' VARCHAR(10) NOT NULL,
-    'DeliDate' DATE NOT NULL,
-    'RequestID' VARCHAR(10) NOT NULL,
+    DeliNoteID VARCHAR(9) NOT NULL,
+    Status VARCHAR(10) NOT NULL,
+    DeliDate DATE NOT NULL,
+    RequestID VARCHAR(10) NOT NULL,
 	
 	CONSTRAINT  DeliveryNote_pk  PRIMARY KEY  (DeliNoteID),
 			
@@ -180,9 +182,9 @@ INSERT INTO DeliveryNote VALUES
 
 /*Product*/
 CREATE TABLE IF NOT EXISTS Product (
-    'ProductID' VARCHAR(8) NOT NULL,
-    'ProductName' VARCHAR(20) NOT NULL,
-    'Description' VARCHAR(100),
+    ProductID VARCHAR(8) NOT NULL,
+    ProductName VARCHAR(20) NOT NULL,
+    Description VARCHAR(100),
 	
 	CONSTRAINT  Product_pk  PRIMARY KEY  (ProductID),
 	CONSTRAINT  Product_ProductID_cc 
@@ -195,10 +197,10 @@ INSERT INTO Product VALUES
 	
 /*ProductSupplier*/
 CREATE TABLE IF NOT EXISTS Product_Supplier (
-    'PSID' VARCHAR(9) NOT NULL,
-    'SupID' VARCHAR(10) NOT NULL,
-    'ProductID' VARCHAR(8) NOT NULL,
-    'UnitPrice' INT,
+    PSID VARCHAR(9) NOT NULL,
+    SupID VARCHAR(10) NOT NULL,
+    ProductID VARCHAR(8) NOT NULL,
+    UnitPrice INT,
 	
 	CONSTRAINT  Product_Supplier_pk  PRIMARY KEY  (PSID),				
 	CONSTRAINT  Product_Supplier_PSID_cc 
@@ -211,9 +213,9 @@ INSERT INTO Product_Supplier VALUES
 	
 /*Warehouse*/
 CREATE TABLE IF NOT EXISTS Warehouse (
-    'StockID' VARCHAR(8) NOT NULL,
-    'Quantity' INT NOT NULL,
-    'PSID' VARCHAR(9) NOT NULL,
+    StockID VARCHAR(8) NOT NULL,
+    Quantity INT NOT NULL,
+    PSID VARCHAR(9) NOT NULL,
 	
 	CONSTRAINT  Warehouse_pk  PRIMARY KEY  (StockID),
 			
@@ -229,11 +231,11 @@ INSERT INTO Warehouse VALUES
 
 /*Order_RequestLine_Product*/
 CREATE TABLE IF NOT EXISTS Order_RequestLine_Product(
-    'ORPID' VARCHAR(10) NOT NULL,
-    'OrderID' VARCHAR(9)  NOT NULL,
-    'RequestID' VARCHAR(10) NOT NULL,
-    'ProductID' VARCHAR(8) NOT NULL,
-    'Quantity' INT,
+    ORPID VARCHAR(10) NOT NULL,
+    OrderID VARCHAR(9)  NOT NULL,
+    RequestID VARCHAR(10) NOT NULL,
+    ProductID VARCHAR(8) NOT NULL,
+    Quantity INT,
 	
 	CONSTRAINT  Order_RequestLine_Product_pk  PRIMARY KEY  (ORPID),			
 	CONSTRAINT  Order_RequestLine_Product_ORPID_cc 
