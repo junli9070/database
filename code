@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
+namespace Ass
+{
+    public partial class Rstatus : Form
+    {
+        int DeliveryNumber;
+        public Rstatus()
+        {
+            InitializeComponent();
+        }
+
+        private void status_Load(object sender, EventArgs e)
+        {
+            MySqlConnection connection = new MySqlConnection("server=localhost;user id=root;password=Room-324;persistsecurityinfo=True;port=3306;database=supplychain;SslMode=none");
+            connection.Open();
+            String sql = "SELECT* FROM Request";
+            MySqlCommand cmd = new MySqlCommand(sql, connection);
+            MySqlDataAdapter sqlDa = null;
+
+            cmd.CommandType = CommandType.Text;
+            sqlDa = new MySqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sqlDa.Fill(dt);
+            ViewStatus.DataSource = dt;
+
+        }
+
+        private void TxtNumber_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnCheck_Click(object sender, EventArgs e)
+        {
+
+            try {
+                DeliveryNumber = int.Parse(TxtNumber.Text);
+
+                
+
+
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Please input number", "Invalid format", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
+        }
+    }
+}
