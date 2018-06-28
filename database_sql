@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS RequestLine (
 	
 	CONSTRAINT  RequestLine_pk  PRIMARY KEY  (RLID),
 	CONSTRAINT  `RequestLine_PSID_fk`  FOREIGN KEY  (`PSID`)
-					REFERENCES  `Staff`(`StaffID`),
+					REFERENCES  `Product_Supplier`(`PSID`),
 	CONSTRAINT  `RequestLine_RequstID_fk`  FOREIGN KEY  (`RequestID`)
 					REFERENCES  Request(`RequestID`),		
 	CONSTRAINT  RequestLine_RLID_cc 
