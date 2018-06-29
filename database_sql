@@ -151,8 +151,8 @@ CREATE TABLE IF NOT EXISTS RequestLine (
 		CHECK  (RequestID IN ( 'Rl*' ) )
 );
 INSERT INTO RequestLine VALUES
-    ('Rl 000001','R 000001','Ps 000001',120),
-    ('Rl 000002','R 000002','Ps 000002',230);
+    ('Rl 000001','Req 000001','Ps 000001',120),
+    ('Rl 000002','Req 000002','Ps 000002',230);
 
 	
 /*PurchaseOrder*/
@@ -187,8 +187,7 @@ CREATE TABLE IF NOT EXISTS DeliveryNote (
 		CHECK  (DeliNoteID IN ('Dr*'))
 );
 INSERT INTO DeliveryNote VALUES
-    ('Dn 000001','finish','2018-06-20','Req 000001'),
-    ('Dn 000002','process','2018-05-10','Req 000002');
+    ('Dn 000001','finish','2018-06-20','Req 000001');
 
 
 /*Product*/
